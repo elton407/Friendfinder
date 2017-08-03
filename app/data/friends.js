@@ -109,7 +109,7 @@ $(".submit").on("click", function(){
              $.post("/api/new", newCharacter)
             .done(function(data) {
               console.log(data);
-              alert("Adding character...");
+              //alert("Adding character...");
 
               
             });
