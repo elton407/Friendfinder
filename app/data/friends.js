@@ -1,15 +1,14 @@
  $(document).ready(function() {
     $('select').material_select();
+    $('.modal').modal();
   });
 
 var scores = [];
-
+var yourMatch;
 
  $("a.btn-large").on("click", function(){
  	window.location.href = '/survey';
  });
-
-
 
 $(".submit").on("click", function(){
 	var userName = $(".validate").val();
@@ -41,10 +40,6 @@ $(".submit").on("click", function(){
        var userInputName = newCharacter.name;
        var usersTotalScore = newCharacter.totalScore;
 
-      
-
-
-
 
         var currentURL = window.location.origin;
       $.ajax({ url: currentURL + "/all", method: "GET" })
@@ -56,9 +51,6 @@ $(".submit").on("click", function(){
         // Here we then log the NYTData to console, where it will show up as an object.
         console.log(tableData);
         //console.log(tableData[0].name);
-
-
-        
 
         var userTotalScoreArray = [];
         var apitotalscoreArray = [];
@@ -83,10 +75,13 @@ $(".submit").on("click", function(){
               console.log("these are all user scores " + counts);
               console.log("this is the score you need to find closest to " + matchGoal);
 
+
+              if (apitotalscoreArray.length != 0) {
               var closest = counts.reduce(function(prev, curr) {
                 return (Math.abs(curr - matchGoal) < Math.abs(prev - matchGoal) ? curr : prev);
                 return; 
               });
+          }
 
               console.log("The closest score is " + closest);
 
@@ -94,12 +89,13 @@ $(".submit").on("click", function(){
               for (var i = 0; i < tableData.length; i++) {
                 if (tableData[i].totalScore == closest) {
                   console.log("Your match is: " + tableData[i].name);
+                  yourMatch = tableData[i].name;
+                  userResults();
+                  $('#modal1').modal();
+                  $('#modal1').modal("open");
+                  $(".submit").hide();
                 }
               }
-
-
-
-
 
              $.post("/api/new", newCharacter)
             .done(function(data) {
@@ -108,6 +104,8 @@ $(".submit").on("click", function(){
 
               
             });
+
+            //userResults();
 
         //}
         // if (userInputName != userName && userTotalResponse == total) {
@@ -120,6 +118,18 @@ $(".submit").on("click", function(){
         //console.log("api result scores" + apitotalscoreArray);
      });//(ajaxend)
     //}
-	
 });
+
+
+var userResults = function () {
+  console.log("hi");
+  $("h4").append("The Results Are In!");
+  $("p").append("Your Match is: " + yourMatch + "!" );
+}
+
+var emptyResults = function () {
+  $("h4").empty();
+  $("p").empty();
+}
+
 	
