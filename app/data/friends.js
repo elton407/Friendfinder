@@ -5,13 +5,18 @@
 
 var scores = [];
 var yourMatch;
+var apImageSrc;
+var yourMatchImg;
 
  $("a.btn-large").on("click", function(){
  	window.location.href = '/survey';
  });
 
+
+
 $(".submit").on("click", function(){
 	var userName = $(".validate").val();
+  apImageSrc = $(".image").val();
 	
 	var userScoreInput;
 	
@@ -33,7 +38,8 @@ $(".submit").on("click", function(){
         var newCharacter = {
         name: userName,
         scores: scores,
-        totalScore: userTotalResponse
+        totalScore: userTotalResponse,
+        imageSrc: apImageSrc
         
       };
 
@@ -89,13 +95,16 @@ $(".submit").on("click", function(){
               for (var i = 0; i < tableData.length; i++) {
                 if (tableData[i].totalScore == closest) {
                   console.log("Your match is: " + tableData[i].name);
+                  yourMatchImg = tableData[i].imageSrc;
                   yourMatch = tableData[i].name;
-                  userResults();
+                  
+                }
+              }
+
+              userResults();
                   $('#modal1').modal();
                   $('#modal1').modal("open");
                   $(".submit").hide();
-                }
-              }
 
              $.post("/api/new", newCharacter)
             .done(function(data) {
@@ -124,12 +133,14 @@ $(".submit").on("click", function(){
 var userResults = function () {
   console.log("hi");
   $("h4").append("The Results Are In!");
+  $("img").attr("src", yourMatchImg);
   $("p").append("Your Match is: " + yourMatch + "!" );
 }
 
 var emptyResults = function () {
   $("h4").empty();
   $("p").empty();
+
 }
 
 	
